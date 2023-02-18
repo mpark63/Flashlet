@@ -42,7 +42,7 @@ router.post(`${endpoint}`, async (req, res, next) => {
       newFlashcard.deckId = deck._id; 
       await Flashcard.create(newFlashcard); 
     }
-    await User.findByIdAndUpdate(deck.userId, { $push: { deckIds: deck._id } }); 
+    await User.findByIdAndUpdate(deck.userId, { $push: { deckIds: deck._id } }, { new: true}); 
     const flashcards = await Flashcard.findByDeckId(deck._id);
     res.json({
       status: 200,
@@ -58,7 +58,7 @@ router.delete(`${endpoint}/:id`, async (req, res, next) => {
   try {
     const { id } = req.params; 
     let deck = await Deck.findByIdAndDelete(id); 
-    await User.findByIdAndUpdate(deck.userId, { $pull: { deckIds: deck._id } }); 
+    await User.findByIdAndUpdate(deck.userId, { $pull: { deckIds: deck._id } }, { new: true}); 
     res.json({
       status: 200,
       message: `Successfully deleted the following deck!`,
@@ -74,9 +74,9 @@ router.patch(`${endpoint}/:id`, async (req, res, next) => {
     const { id } = req.params; 
     const { name, description } = req.body; 
     const updateBody = {}; 
-    if (question) updateBody.name = name; 
-    if (answer) updateBody.description = description; 
-    const deck = await Deck.findByIdAndUpdate(id, updateBody); 
+    if (name) updateBody.name = name; 
+    if (description) updateBody.description = description; 
+    const deck = await Deck.findByIdAndUpdate(id, updateBody, { new: true }); 
     res.json({
       status: 200,
       message: `Successfully updated the following deck!`,

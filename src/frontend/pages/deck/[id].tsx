@@ -3,10 +3,10 @@ import { useRouter } from 'next/router'
 import Head from "next/head";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from 'react-redux';
-import { type Flashcard } from "../../utils/commonTypes";
+import { Deck, type Flashcard } from "../../utils/commonTypes";
 import FlashcardJSX from "../../components/FlashcardJSX";
 import Header from "../../components/Header";
-import { selectCurrentDeck, selectCurrentUser, selectFlashcards, updateCurrentFlashcards } from "../../slices/appSlice";
+import { selectCurrentDeck, selectCurrentUser, selectFlashcards, updateCurrentDeck, updateCurrentFlashcards } from "../../slices/appSlice";
 import { getAPI } from "../../utils/assets";
 import axios from "axios";
 
@@ -26,8 +26,10 @@ const DeckPage: NextPage = () => {
   useEffect(() => {
     // make new deck 
     if (!id) return; 
-    axios.get(getAPI(window) + `/flashcards/${id}`).then((res) => {
-      const newFlashcards: Flashcard[] = res.data.data; 
+    axios.get(getAPI(window) + `/decks/${id}`).then((res) => {
+      const newDeck: Deck = res.data.data.deck; 
+      const newFlashcards: Flashcard[] = res.data.data.flashcards; 
+      dispatch(updateCurrentDeck(newDeck));
       dispatch(updateCurrentFlashcards(newFlashcards));
     }); 
   }, [id])
@@ -87,19 +89,19 @@ const DeckPage: NextPage = () => {
 
           <div className="container flex items-center justify-center gap-12 px-16 py-16">
             <div 
-              className="flex max-w-xl flex-col gap-4 rounded-xl bg-white/10 p-4 text-white hover:bg-white/20"
+              className="flex max-w-xl flex-col gap-4 rounded-xl bg-white/10 p-4 text-white hover:bg-white/20 cursor-pointer"
               onClick={prev}
             >
               <h1 className='text-white'> prev </h1>
             </div>
             <div 
-              className="flex max-w-xl flex-col gap-4 rounded-xl bg-white/10 p-4 text-white hover:bg-white/20"
+              className="flex max-w-xl flex-col gap-4 rounded-xl bg-white/10 p-4 text-white hover:bg-white/20 cursor-pointer"
               onClick={addFlashcard}
             >
               <h3 className="text-2xl font-bold">New flashcard +</h3>
             </div>
             <div 
-              className="flex max-w-xl flex-col gap-4 rounded-xl bg-white/10 p-4 text-white hover:bg-white/20"
+              className="flex max-w-xl flex-col gap-4 rounded-xl bg-white/10 p-4 text-white hover:bg-white/20 cursor-pointer"
               onClick={next}
             >
               <h1 className='text-white'> next </h1>

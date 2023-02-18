@@ -23,7 +23,6 @@ router.post(`${endpoint}`, async (req, res, next) => {
   try {
     const body = req.body; 
     let flashcard = await Flashcard.create(body); 
-    await Deck.findByIdAndUpdate(flashcard.deckId, { $push : { flashcardIds: flashcard._id }}); 
     res.json({
       status: 200,
       message: `Successfully created the following flashcard!`,
@@ -38,7 +37,6 @@ router.delete(`${endpoint}/:id`, async (req, res, next) => {
   try {
     const { id } = req.params; 
     let flashcard = await Flashcard.findByIdAndDelete(id); 
-    await Deck.findByIdAndUpdate(flashcard.deckId, { $pull : { flashcardIds: flashcard._id }}); 
     res.json({
       status: 200,
       message: `Successfully deleted the following flashcard!`,
@@ -56,7 +54,7 @@ router.patch(`${endpoint}/:id`, async (req, res, next) => {
     const updateBody = {}; 
     if (question) updateBody.question = question; 
     if (answer) updateBody.answer = answer; 
-    const flashcard = await Flashcard.findByIdAndUpdate(id, updateBody); 
+    const flashcard = await Flashcard.findByIdAndUpdate(id, updateBody, { new: true}); 
     res.json({
       status: 200,
       message: `Successfully updated the following flashcard!`,

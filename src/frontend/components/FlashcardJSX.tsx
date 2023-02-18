@@ -56,7 +56,7 @@ const FlashcardJSX: FC<{
   return (
     <>
       <div 
-        className="flex flex-col w-full h-80 rounded-xl text-center justify-center bg-white/10 p-4 text-white hover:bg-white/20"
+        className="flex flex-col w-full h-80 rounded-xl text-center justify-center bg-white/10 p-4 text-white hover:bg-white/20 cursor-help"
         onClick={flip}
       >
         { !editMode ? 
@@ -71,13 +71,13 @@ const FlashcardJSX: FC<{
       </div>
       <div className='flex flex-col gap-5'>
         <div 
-          className="flex max-w-xl flex-col gap-4 rounded-xl bg-white/10 p-4 text-white hover:bg-white/20"
+          className="flex max-w-xl flex-col gap-4 rounded-xl bg-white/10 p-4 text-white hover:bg-white/20 cursor-pointer"
           onClick={toggle}
         >
           <h1 className='text-white text-center'> { !editMode ? "edit" : "save" } </h1>
         </div>
         <div 
-          className="flex max-w-xl flex-col gap-4 rounded-xl bg-white/10 p-4 text-white hover:bg-white/20"
+          className="flex max-w-xl flex-col gap-4 rounded-xl bg-white/10 p-4 text-white hover:bg-white/20 cursor-pointer"
           onClick={handleDelete}
         >
           <h1 className='text-white'>delete</h1>
