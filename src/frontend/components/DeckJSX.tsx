@@ -5,11 +5,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getAPI } from '../utils/assets';
 import axios from 'axios';
 import { selectCurrentUser, updateCurrentDeck, updateCurrentFlashcards } from '../slices/appSlice';
+import { useRouter } from "next/router"; 
 
 const DeckJSX: FC<{
   deck: Deck | undefined
 }> = ({ deck }) => {
   const dispatch = useDispatch(); 
+  const router = useRouter();
   const user = useSelector(selectCurrentUser);
 
   const handleExisting = async () => {
@@ -19,6 +21,7 @@ const DeckJSX: FC<{
     const flashcards: Flashcard[] = res.data.data.flashcards;
     dispatch(updateCurrentDeck(deckObj));
     dispatch(updateCurrentFlashcards(flashcards));
+    router.push(`/deck/${deckObj._id}`)
   }
 
   const handleSample = async () => {
@@ -32,14 +35,14 @@ const DeckJSX: FC<{
     const flashcards: Flashcard[] = res.data.data.flashcards; 
     dispatch(updateCurrentDeck(deckObj));
     dispatch(updateCurrentFlashcards(flashcards));
+    router.push(`/deck/${deckObj._id}`)
   }
 
   return (
     <>
-      <Link
+      <div
         className="flex max-w-xs flex-col gap-4 rounded-xl bg-white/10 p-4 text-white hover:bg-white/20"
         onClick={deck ? handleExisting : handleSample}
-        href={ deck ? `/deck/${deck._id}` : "/deck/sample"}
       >
         { deck ? (
           <>
@@ -49,7 +52,7 @@ const DeckJSX: FC<{
         ) : (
           <h3 className="text-2xl font-bold">Sample deck ~</h3>
         ) }
-      </Link>
+      </div>
     </>
   )
 }
