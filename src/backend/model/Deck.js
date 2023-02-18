@@ -4,7 +4,6 @@ const Schema = mongoose.Schema;
 const DeckSchema = new mongoose.Schema({
   name: { type: String, required: true },
   description: { type: String, required: true },
-  flashcardIds: [{ type: Schema.Types.ObjectId, ref: "Flashcard", default: [] }],
   userId: { type: String, required: true },
   createdAt: {
     type: Date, 
@@ -13,5 +12,9 @@ const DeckSchema = new mongoose.Schema({
 });
 
 const Deck = mongoose.model("Deck", DeckSchema);
+
+DeckSchema.statics.findByUserId = function (userId) {
+  return this.find({ userId });
+};
 
 export default Deck;

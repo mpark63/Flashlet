@@ -3,39 +3,36 @@ import { useRouter } from 'next/router'
 import Head from "next/head";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from 'react-redux';
-import { Deck, type Flashcard } from "../../utils/commonTypes";
+import { type Flashcard } from "../../utils/commonTypes";
 import FlashcardJSX from "../../components/FlashcardJSX";
 import Header from "../../components/Header";
-import { selectCurrentDeck, selectCurrentUser, selectFlashcards, updateCurrentDeck, updateCurrentFlashcards } from "../../slices/appSlice";
-import { getAPI, sampleDeck } from "../../utils/assets";
+import { selectCurrentDeck, selectCurrentUser, selectFlashcards, updateCurrentFlashcards } from "../../slices/appSlice";
+import { getAPI } from "../../utils/assets";
 import axios from "axios";
 
 const DeckPage: NextPage = () => {
   const router = useRouter();
   const { id } = router.query; 
-  // get deck by id 
-  const [index, setIndex] = useState<number>(0); 
+  
+  // redux setup 
+  const dispatch = useDispatch();
   const user = useSelector(selectCurrentUser);
   const deck = useSelector(selectCurrentDeck);
   const flashcards = useSelector(selectFlashcards); 
-  const [total, setTotal] = useState<number>(flashcards.length); 
-  const dispatch = useDispatch();
 
+  const [index, setIndex] = useState<number>(0); 
+  const [total, setTotal] = useState<number>(flashcards.length); 
+  
   useEffect(() => {
     // make new deck 
     if (!id) return; 
-    axios.get(getAPI(window) + `/decks/${id}`).then((res) => {
-      const deckObj: Deck = res.data.data; 
-      console.log(deckObj);
-      dispatch(updateCurrentDeck(deckObj));
-      dispatch(updateCurrentFlashcards(deckObj.flashcardIds));
+    axios.get(getAPI(window) + `/flashcards/${id}`).then((res) => {
+      const newFlashcards: Flashcard[] = res.data.data; 
+      dispatch(updateCurrentFlashcards(newFlashcards));
     }); 
   }, [id])
 
   useEffect(() => {
-    if (flashcards.length === 0) {
-      dispatch(updateCurrentFlashcards(sampleDeck));
-    } 
     setTotal(flashcards.length);
     setIndex(flashcards.length === 0 ? -1 : 0); 
   }, [flashcards]); 
@@ -43,9 +40,9 @@ const DeckPage: NextPage = () => {
   const addFlashcard = async () => {
     const index = flashcards.length; 
     const body: any = {
+      question: `Ask a question?`, 
+      answer: `Check the answer!`, 
       deckId: deck._id, 
-      question: `Question ${index}`, 
-      answer: `Answer ${index}`, 
       userId: user._id
     }
     const res: any = await axios.post(getAPI(window) + `/flashcards`, body); 
@@ -83,7 +80,7 @@ const DeckPage: NextPage = () => {
           </div>
 
           <div className="container flex items-center justify-center gap-12 px-16 py-4 ">
-            {flashcards && flashcards.length ? (
+            { flashcards.length > 0 && index !== -1 ? (
               <FlashcardJSX flashcard={flashcards[index]} />
             ) : null}
           </div>

@@ -33,7 +33,7 @@ const FlashcardJSX: FC<{
       setText(question);
       await axios.patch(getAPI(window) + `/flashcards/${flashcard._id}`, {
         question, 
-        flashcard 
+        answer 
       }); 
     }
     setEditMode(!editMode);

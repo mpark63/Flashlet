@@ -3,10 +3,10 @@ import Head from "next/head";
 import { useRouter } from "next/router"; 
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from 'react-redux';
-import { type Deck } from "../utils/commonTypes";
+import { Flashcard, type Deck } from "../utils/commonTypes";
 import DeckJSX from "../components/DeckJSX";
 import Header from "../components/Header";
-import { selectCurrentUser, selectDecks, updateCurrentDeck, updateDecks } from "../slices/appSlice";
+import { selectCurrentUser, selectDecks, updateCurrentDeck, updateCurrentFlashcards, updateDecks } from "../slices/appSlice";
 import axios from "axios";
 import { getAPI } from "../utils/assets";
 
@@ -18,17 +18,19 @@ const Dashboard: NextPage = () => {
   const dispatch = useDispatch();
 
   const handleNew = async () => {
-    if (user._id === "guest") router.push('/deck/new'); 
     // make new deck 
     const res = await axios.post(getAPI(window) + `/decks`, {
       name: "New deck", 
       description: "Describe your new deck!", 
       userId: user._id
     }); 
-    const deck: Deck = res.data.data; 
+    const deck: Deck = res.data.data.deck; 
+    const flashcards: Flashcard[] = res.data.data.flashcards; 
+    console.log(flashcards);
     dispatch(updateCurrentDeck(deck));
     let newDecks = [...decks, deck]; 
     dispatch(updateDecks(newDecks)); 
+    dispatch(updateCurrentFlashcards(flashcards));
     // navigate to deck with id 
     router.push(`/deck/${deck._id}`); 
   }

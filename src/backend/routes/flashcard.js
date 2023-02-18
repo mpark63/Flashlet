@@ -1,22 +1,18 @@
 import express from "express";
-import ApiError from "../model/ApiError.js";
 import Deck from "../model/Deck.js";
 import Flashcard from "../model/Flashcard.js"; 
 
 const router = express.Router();
 const endpoint = "/flashcards";
 
-router.get(`${endpoint}/:id`, async (req, res, next) => {
+router.get(`${endpoint}/:deckId`, async (req, res, next) => {
   try {
-    const { id } = req.params; 
-    let flashcard = await Flashcard.findById(id); 
-    if (!flashcard) {
-      throw new ApiError(404, "Flashcard not found."); 
-    }
+    const { deckId } = req.params; 
+    let flashcards = await Flashcard.findByDeckId(deckId); 
     res.json({
       status: 200,
       message: `Successfully retrieved the following flashcard!`,
-      data: flashcard,
+      data: flashcards,
     });
   } catch (err) {
     next(err);

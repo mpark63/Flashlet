@@ -18,7 +18,6 @@ const Home: NextPage = () => {
   const handleSubmit = async () => {
     // API get user event.target.value 
     const retrieved = await axios.get(getAPI(window) + `/users/${input}`); 
-    console.log(retrieved);
     const user: User = retrieved.data.data; 
     const decks: Deck[] = user.deckIds; 
     // updateDecks 
