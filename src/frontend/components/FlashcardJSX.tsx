@@ -40,8 +40,9 @@ const FlashcardJSX: FC<{
         answer 
       }); 
       const updated = res.data.data;
-      let newFlashcards = flashcards.filter((f) => f._id != updated._id)
-      newFlashcards = [...newFlashcards, updated];
+      let newFlashcards: Flashcard[] = flashcards.map((f: Flashcard) => {
+        return (f._id === updated._id ? updated : f)
+      })
       dispatch(updateCurrentFlashcards(newFlashcards));
       setQuestion(question);
       setAnswer(answer);

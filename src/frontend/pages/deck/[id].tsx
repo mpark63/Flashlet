@@ -36,10 +36,12 @@ const DeckPage: NextPage = () => {
   }, [id])
 
   useEffect(() => {
-    if (index !== 0) {
+    if (flashcards.length > total) { // added
+      setIndex(flashcards.length - 1); 
+    } else if (total > flashcards.length) {
       setIndex(index - 1); 
-      setTotal(flashcards.length);
     }
+    setTotal(flashcards.length);
   }, [flashcards.length])
 
   const addFlashcard = async () => {
