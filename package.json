@@ -34,7 +34,9 @@
   "scripts": {
     "start": "node src/server.js",
     "dev": "dotenv -e .env nodemon src/server.js",
-    "frontend": "next dev src/frontend"
+    "build": "next build src/frontend", 
+    "frontend-dev": "next dev src/frontend", 
+    "frontend-prod": "next start src/frontend"
   },
   "eslintConfig": {
     "extends": [
