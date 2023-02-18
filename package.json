@@ -35,8 +35,8 @@
     "start": "node src/server.js",
     "dev": "dotenv -e .env nodemon src/server.js",
     "frontend-dev": "next dev src/frontend", 
-    "build": "next build", 
-    "frontend-prod": "next start"
+    "build": "next build src/frontend", 
+    "frontend-prod": "next start src/frontend"
   },
   "eslintConfig": {
     "extends": [
