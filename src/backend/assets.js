@@ -18,6 +18,6 @@ export const sampleDeck = [
   ]
 
 export const newFlashcard = {
-  question: "Ask a question?", 
-  answer: "Check the answer!"
+  question: "Have a question?", 
+  answer: "Here's the answer!"
 }

@@ -9,15 +9,19 @@ import { useDispatch, useSelector } from 'react-redux';
 const FlashcardJSX: FC<{
   flashcard: Flashcard, 
 }> = ({ flashcard }) => {
-  const [text, setText] = useState<string>(flashcard.question); 
-  const [question, setQuestion] = useState<string>(flashcard.question); 
-  const [answer, setAnswer] = useState<string>(flashcard.answer); 
+  const [text, setText] = useState<string>(''); 
+  const [question, setQuestion] = useState<string>(''); 
+  const [answer, setAnswer] = useState<string>(''); 
   const [editMode, setEditMode] = useState<boolean>(false); 
   const flashcards = useSelector(selectFlashcards); 
   const dispatch = useDispatch();
 
   useEffect(() => {
-    setText(flashcard.question);
+    if (flashcard) {
+      setText(flashcard.question);
+      setQuestion(flashcard.question);
+      setAnswer(flashcard.answer);
+    }
   }, [flashcard]); 
   
   const flip = () => {
@@ -31,10 +35,16 @@ const FlashcardJSX: FC<{
   const toggle = async (event) => {
     if (editMode) { 
       setText(question);
-      await axios.patch(getAPI(window) + `/flashcards/${flashcard._id}`, {
+      const res = await axios.patch(getAPI(window) + `/flashcards/${flashcard._id}`, {
         question, 
         answer 
       }); 
+      const updated = res.data.data;
+      let newFlashcards = flashcards.filter((f) => f._id != updated._id)
+      newFlashcards = [...newFlashcards, updated];
+      dispatch(updateCurrentFlashcards(newFlashcards));
+      setQuestion(question);
+      setAnswer(answer);
     }
     setEditMode(!editMode);
   }
@@ -56,7 +66,7 @@ const FlashcardJSX: FC<{
   return (
     <>
       <div 
-        className="flex flex-col w-full h-80 rounded-xl text-center justify-center bg-white/10 p-4 text-white hover:bg-white/20 cursor-help"
+        className={`flex flex-col w-full h-80 rounded-xl text-center justify-center bg-white/10 p-4 text-white ${text !== question ? "bg-white/20" : ''} cursor-help`}
         onClick={flip}
       >
         { !editMode ? 

@@ -31,19 +31,22 @@ const DeckPage: NextPage = () => {
       const newFlashcards: Flashcard[] = res.data.data.flashcards; 
       dispatch(updateCurrentDeck(newDeck));
       dispatch(updateCurrentFlashcards(newFlashcards));
+      setTotal(newFlashcards.length);
     }); 
   }, [id])
 
   useEffect(() => {
-    setTotal(flashcards.length);
-    setIndex(flashcards.length === 0 ? -1 : 0); 
-  }, [flashcards]); 
+    if (index !== 0) {
+      setIndex(index - 1); 
+      setTotal(flashcards.length);
+    }
+  }, [flashcards.length])
 
   const addFlashcard = async () => {
     const index = flashcards.length; 
     const body: any = {
-      question: `Ask a question?`, 
-      answer: `Check the answer!`, 
+      question: `Have a question?`, 
+      answer: `Here's the answer!`, 
       deckId: deck._id, 
       userId: user._id
     }
@@ -82,7 +85,7 @@ const DeckPage: NextPage = () => {
           </div>
 
           <div className="container flex items-center justify-center gap-12 px-16 py-4 ">
-            { flashcards.length > 0 && index !== -1 ? (
+            { flashcards.length > 0 ? (
               <FlashcardJSX flashcard={flashcards[index]} />
             ) : null}
           </div>
